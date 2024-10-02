@@ -7,10 +7,15 @@ class UsersApi (Resource) :
     def post (self,route):
         if route == "createuser":
             return CreateUser()
+        
         if route == "getsingleuser":
             return GetSingleUser()
+        
         if route == "loginusers":
             return LoginUsers()
+        
+        if route =="updateuser":
+            return UpdateUser()
     
 
     def get (self,route):
@@ -18,9 +23,9 @@ class UsersApi (Resource) :
             return GetAllUsers()
         
 
-    def patch (self,route):
-        if route =="updateuser":
-            return UpdateUser()
+    # def patch (self,route):
+    #     if route =="updateuser":
+    #         return UpdateUser()
     
 
     def delete (self,route):

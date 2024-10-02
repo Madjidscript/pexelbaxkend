@@ -102,18 +102,21 @@ def GetSingleUser():
 
 
 def UpdateUser():
+
     response = {}
-    user_id = request.json.get('user_id')
-    user_to_update = User.query.filter_by(user_id=user_id).first()
-    if user_to_update:
-        user_to_update.firstname = request.json.get('firstname', user_to_update.firstname)
-        user_to_update.lastname = request.json.get('lastname', user_to_update.lastname)
-        user_to_update.contact = request.json.get('contact', user_to_update.contact)
-        user_to_update.password_hash = request.json.get('password', user_to_update.password_hash)  # Hachez le mot de passe si nécessaire
-        user_to_update.years = request.json.get('years', user_to_update.years)
-        user_to_update.month = request.json.get('month', user_to_update.month)
-        user_to_update.day = request.json.get('day', user_to_update.day)
-        user_to_update.genre = request.json.get('genre', user_to_update.genre)
+    try:
+        id = '2'
+        # id = request.json.get('user_id')
+        user_to_update = User.query.filter_by(user_id=id).first()
+
+        user_to_update.firstname = request.json.get('firstname')
+        user_to_update.lastname = request.json.get('lastname')
+        user_to_update.contact = request.json.get('contact')
+        # user_to_update.password = request.json.get('password') 
+        user_to_update.years = request.json.get('years')
+        user_to_update.month = request.json.get('month')
+        user_to_update.day = request.json.get('day')
+        user_to_update.genre = request.json.get('genre')
         
         db.session.commit()
 
@@ -128,11 +131,13 @@ def UpdateUser():
         rs['genre'] = user_to_update.genre
 
         response['status'] = 'Success'
-        response['user_id'] = rs
-    else:
-        response['status'] = 'error'
-        response['error_description'] = 'User not found'
+        response['users'] = rs
 
+    except Exception as e:
+        response['status']='erreur'
+        response['message']=str(e)
+    
+    
     return response
 
 
@@ -160,7 +165,7 @@ def LoginUsers():
     reponse = {}
     try:
         contact = request.json.get('contact')
-        password_hash = request.json.get('password_hash')
+        password_hash = request.json.get('password')
         login_admin = User.query.filter_by(contact=contact).first()
         users_infos = {
             'user_id': login_admin.user_id,
