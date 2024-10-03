@@ -10,9 +10,15 @@ from werkzeug.security import check_password_hash # type: ignore
 
 def CreateUser():
     response = {}
-
+    contacts = request.json.get('contact')
     password_hash = request.json.get('password')
-    
+    user_existe= User.query.filter_by(contact=contacts).first()
+    print ("papa",password_hash)
+    if user_existe:
+        response['status']="eror"
+        response['user_info']="utilisateur existe deja"
+        return response
+
     new_user = User()
     new_user.firstname = request.json.get('firstname')
     new_user.password = bcrypt.hashpw(password_hash.encode('utf-8'), bcrypt.gensalt())  # Assurez-vous de hacher le mot de passe
@@ -39,7 +45,7 @@ def CreateUser():
 
     response['status'] = 'Success'
     response['user_info'] = rs
-
+   
     return response
 
 
@@ -58,7 +64,6 @@ def GetAllUsers():
                 'month' : user.month,
                 'day' : user.day,
                'genre' : user.genre
-    
             }
             users_info.append(info_user)
         response['status'] = 'success'
@@ -105,7 +110,7 @@ def UpdateUser():
 
     response = {}
     try:
-        id = '2'
+        id = '1'
         # id = request.json.get('user_id')
         user_to_update = User.query.filter_by(user_id=id).first()
 
@@ -137,7 +142,7 @@ def UpdateUser():
         response['status']='erreur'
         response['message']=str(e)
     
-    
+    print("jhdfjh", gt)
     return response
 
 
@@ -165,8 +170,12 @@ def LoginUsers():
     reponse = {}
     try:
         contact = request.json.get('contact')
-        password_hash = request.json.get('password')
+        password = request.json.get('password')
         login_admin = User.query.filter_by(contact=contact).first()
+        if not login_admin:
+            reponse["status"]="error"
+            reponse["infos"]="email ou numero incorect"
+            return reponse
         users_infos = {
             'user_id': login_admin.user_id,
              'firstname' :  login_admin.firstname,
@@ -178,13 +187,14 @@ def LoginUsers():
             'genre' : login_admin.genre
                          
         }
-        if login_admin and bcrypt.checkpw(password_hash.encode('utf-8'), login_admin.password_hash.encode('utf-8')):
+        if login_admin and bcrypt.checkpw(password.encode('utf-8'), login_admin.password.encode('utf-8')):
             expires = timedelta(hours=1)
             access_token = create_access_token(identity=contact)
 
             reponse['status'] = 'success'
             reponse['admin_infos'] = users_infos
             reponse['access_token'] = access_token
+            reponse["message"]="connexion effectuer"
 
         else:
             reponse['status'] = 'error'
