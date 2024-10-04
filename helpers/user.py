@@ -110,7 +110,7 @@ def UpdateUser():
 
     response = {}
     try:
-        #id = '1'
+      
         id = request.json.get('user_id')
         if not id:
             print("mon erreur id update",id)
@@ -150,7 +150,7 @@ def UpdateUser():
         response['status']='erreur hooo'
         response['message']=str(e)
     
-    print("jhdfjh")
+   
     return response
 
 
