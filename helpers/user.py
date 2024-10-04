@@ -110,9 +110,17 @@ def UpdateUser():
 
     response = {}
     try:
-        id = '1'
-        # id = request.json.get('user_id')
+        #id = '1'
+        id = request.json.get('user_id')
+        if not id:
+            print("mon erreur id update",id)
+            return jsonify({'status': 'erreur', 'message': 'ID utilisateur manquant'}), 400
         user_to_update = User.query.filter_by(user_id=id).first()
+        if not user_to_update:
+           return jsonify({'status': 'erreur', 'message': 'Utilisateur non trouvé'}), 404
+      
+       
+           
 
         user_to_update.firstname = request.json.get('firstname')
         user_to_update.lastname = request.json.get('lastname')
@@ -139,10 +147,10 @@ def UpdateUser():
         response['users'] = rs
 
     except Exception as e:
-        response['status']='erreur'
+        response['status']='erreur hooo'
         response['message']=str(e)
     
-    print("jhdfjh", gt)
+    print("jhdfjh")
     return response
 
 

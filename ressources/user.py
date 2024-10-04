@@ -16,11 +16,15 @@ class UsersApi (Resource) :
         
         if route =="updateuser":
             return UpdateUser()
+        
+        if route == "deleteuser":
+            return DeleteUser() 
     
 
     def get (self,route):
         if route == "getAllusers":
             return GetAllUsers()
+        
         
 
     # def patch (self,route):
